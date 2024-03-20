@@ -253,9 +253,10 @@ impl<D> From<PathBuf> for MaybePlatformPath<D> {
 /// Wrapper type around PlatformPath that includes a `Chain`, used for separating reth data for
 /// different networks.
 ///
-/// If the chain is either mainnet, or sepolia, then the path will be:
+/// If the chain is either mainnet, sepolia, or holesky, then the path will be:
 ///  * mainnet: `<DIR>/mainnet`
 ///  * sepolia: `<DIR>/sepolia`
+///  * holesky: `<DIR>/holesky`
 /// Otherwise, the path will be dependent on the chain ID:
 ///  * `<DIR>/<CHAIN_ID>`
 #[derive(Clone, Debug, PartialEq, Eq)]
