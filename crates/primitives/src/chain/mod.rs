@@ -2,8 +2,8 @@ pub use alloy_chains::{Chain, NamedChain};
 pub use info::ChainInfo;
 pub use spec::{
     AllGenesisFormats, BaseFeeParams, BaseFeeParamsKind, ChainSpec, ChainSpecBuilder,
-    DisplayHardforks, ForkBaseFeeParams, ForkCondition, ForkTimestamps, DEV, GOERLI, HOLESKY,
-    MAINNET, SEPOLIA,
+    DisplayHardforks, ForkBaseFeeParams, ForkCondition, ForkTimestamps, DEV, HOLESKY, MAINNET,
+    SEPOLIA,
 };
 #[cfg(feature = "optimism")]
 pub use spec::{BASE_MAINNET, BASE_SEPOLIA, OP_SEPOLIA};
@@ -28,8 +28,8 @@ mod tests {
 
     #[test]
     fn test_named_id() {
-        let chain = Chain::from_named(NamedChain::Goerli);
-        assert_eq!(chain.id(), 5);
+        let chain = Chain::from_named(NamedChain::Holesky);
+        assert_eq!(chain.id(), 17000);
     }
 
     #[test]
@@ -55,9 +55,9 @@ mod tests {
 
     #[test]
     fn test_into_u256() {
-        let chain = Chain::from_named(NamedChain::Goerli);
+        let chain = Chain::from_named(NamedChain::Holesky);
         let n: U256 = U256::from(chain.id());
-        let expected = U256::from(5);
+        let expected = U256::from(17000);
 
         assert_eq!(n, expected);
     }

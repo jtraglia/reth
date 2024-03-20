@@ -4,7 +4,7 @@ use crate::{
         EIP1559_INITIAL_BASE_FEE, EMPTY_RECEIPTS, EMPTY_TRANSACTIONS, EMPTY_WITHDRAWALS,
     },
     holesky_nodes,
-    net::{goerli_nodes, mainnet_nodes, sepolia_nodes},
+    net::{mainnet_nodes, sepolia_nodes},
     proofs::state_root_ref_unhashed,
     revm_primitives::{address, b256},
     Address, BlockNumber, ForkFilter, ForkFilterKey, ForkHash, ForkId, Genesis, Hardfork, Head,
@@ -67,49 +67,6 @@ pub static MAINNET: Lazy<Arc<ChainSpec>> = Lazy::new(|| {
         )),
         base_fee_params: BaseFeeParamsKind::Constant(BaseFeeParams::ethereum()),
         prune_delete_limit: 3500,
-    }
-    .into()
-});
-
-/// The Goerli spec
-pub static GOERLI: Lazy<Arc<ChainSpec>> = Lazy::new(|| {
-    ChainSpec {
-        chain: Chain::goerli(),
-        genesis: serde_json::from_str(include_str!("../../res/genesis/goerli.json"))
-            .expect("Can't deserialize Goerli genesis json"),
-        genesis_hash: Some(b256!(
-            "bf7e331f7f7c1dd2e05159666b3bf8bc7a8a3a9eb1d518969eab529dd9b88c1a"
-        )),
-        // <https://goerli.etherscan.io/block/7382818>
-        paris_block_and_final_difficulty: Some((7382818, U256::from(10_790_000))),
-        fork_timestamps: ForkTimestamps::default().shanghai(1678832736).cancun(1705473120),
-        hardforks: BTreeMap::from([
-            (Hardfork::Frontier, ForkCondition::Block(0)),
-            (Hardfork::Homestead, ForkCondition::Block(0)),
-            (Hardfork::Dao, ForkCondition::Block(0)),
-            (Hardfork::Tangerine, ForkCondition::Block(0)),
-            (Hardfork::SpuriousDragon, ForkCondition::Block(0)),
-            (Hardfork::Byzantium, ForkCondition::Block(0)),
-            (Hardfork::Constantinople, ForkCondition::Block(0)),
-            (Hardfork::Petersburg, ForkCondition::Block(0)),
-            (Hardfork::Istanbul, ForkCondition::Block(1561651)),
-            (Hardfork::Berlin, ForkCondition::Block(4460644)),
-            (Hardfork::London, ForkCondition::Block(5062605)),
-            (
-                Hardfork::Paris,
-                ForkCondition::TTD { fork_block: None, total_difficulty: U256::from(10_790_000) },
-            ),
-            (Hardfork::Shanghai, ForkCondition::Timestamp(1678832736)),
-            (Hardfork::Cancun, ForkCondition::Timestamp(1705473120)),
-        ]),
-        // https://goerli.etherscan.io/tx/0xa3c07dc59bfdb1bfc2d50920fed2ef2c1c4e0a09fe2325dbc14e07702f965a78
-        deposit_contract: Some(DepositContract::new(
-            address!("ff50ed3d0ec03ac01d4c79aad74928bff48a7b2b"),
-            4367322,
-            b256!("649bbc62d0e31342afea4e5cd82d4049e7e1ee912fc0889aa790803be39038c5"),
-        )),
-        base_fee_params: BaseFeeParamsKind::Constant(BaseFeeParams::ethereum()),
-        prune_delete_limit: 1700,
     }
     .into()
 });
@@ -470,7 +427,7 @@ impl BaseFeeParams {
         }
     }
 
-    /// Get the base fee parameters for optimism goerli (post Canyon)
+    /// Get the base fee parameters for optimism sepolia (post Canyon)
     #[cfg(feature = "optimism")]
     pub const fn optimism_sepolia_canyon() -> BaseFeeParams {
         BaseFeeParams {
@@ -908,7 +865,6 @@ impl ChainSpec {
         let chain = self.chain;
         match chain.try_into().ok()? {
             C::Mainnet => Some(mainnet_nodes()),
-            C::Goerli => Some(goerli_nodes()),
             C::Sepolia => Some(sepolia_nodes()),
             C::Holesky => Some(holesky_nodes()),
             _ => None,
@@ -1701,7 +1657,7 @@ Post-merge hard forks (timestamp based):
     // Tests that all predefined timestamps are correctly set up in the chainspecs
     #[test]
     fn test_predefined_chain_spec_fork_timestamps() {
-        let predefined = [&MAINNET, &SEPOLIA, &HOLESKY, &GOERLI];
+        let predefined = [&MAINNET, &SEPOLIA, &HOLESKY];
 
         for spec in predefined.iter() {
             let expected_timestamp_forks = &spec.fork_timestamps;
@@ -1932,60 +1888,6 @@ Post-merge hard forks (timestamp based):
     }
 
     #[test]
-    fn goerli_hardfork_fork_ids() {
-        test_hardfork_fork_ids(
-            &GOERLI,
-            &[
-                (
-                    Hardfork::Frontier,
-                    ForkId { hash: ForkHash([0xa3, 0xf5, 0xab, 0x08]), next: 1561651 },
-                ),
-                (
-                    Hardfork::Homestead,
-                    ForkId { hash: ForkHash([0xa3, 0xf5, 0xab, 0x08]), next: 1561651 },
-                ),
-                (
-                    Hardfork::Tangerine,
-                    ForkId { hash: ForkHash([0xa3, 0xf5, 0xab, 0x08]), next: 1561651 },
-                ),
-                (
-                    Hardfork::SpuriousDragon,
-                    ForkId { hash: ForkHash([0xa3, 0xf5, 0xab, 0x08]), next: 1561651 },
-                ),
-                (
-                    Hardfork::Byzantium,
-                    ForkId { hash: ForkHash([0xa3, 0xf5, 0xab, 0x08]), next: 1561651 },
-                ),
-                (
-                    Hardfork::Constantinople,
-                    ForkId { hash: ForkHash([0xa3, 0xf5, 0xab, 0x08]), next: 1561651 },
-                ),
-                (
-                    Hardfork::Petersburg,
-                    ForkId { hash: ForkHash([0xa3, 0xf5, 0xab, 0x08]), next: 1561651 },
-                ),
-                (
-                    Hardfork::Istanbul,
-                    ForkId { hash: ForkHash([0xc2, 0x5e, 0xfa, 0x5c]), next: 4460644 },
-                ),
-                (
-                    Hardfork::Berlin,
-                    ForkId { hash: ForkHash([0x75, 0x7a, 0x1c, 0x47]), next: 5062605 },
-                ),
-                (
-                    Hardfork::London,
-                    ForkId { hash: ForkHash([0xb8, 0xc6, 0x29, 0x9d]), next: 1678832736 },
-                ),
-                (
-                    Hardfork::Shanghai,
-                    ForkId { hash: ForkHash([0xf9, 0x84, 0x3a, 0xbf]), next: 1705473120 },
-                ),
-                (Hardfork::Cancun, ForkId { hash: ForkHash([0x70, 0xcc, 0x14, 0xe2]), next: 0 }),
-            ],
-        );
-    }
-
-    #[test]
     fn sepolia_hardfork_fork_ids() {
         test_hardfork_fork_ids(
             &SEPOLIA,
@@ -2155,63 +2057,6 @@ Post-merge hard forks (timestamp based):
                 ),
             ],
         )
-    }
-
-    #[test]
-    fn goerli_forkids() {
-        test_fork_ids(
-            &GOERLI,
-            &[
-                (
-                    Head { number: 0, ..Default::default() },
-                    ForkId { hash: ForkHash([0xa3, 0xf5, 0xab, 0x08]), next: 1561651 },
-                ),
-                (
-                    Head { number: 1561650, ..Default::default() },
-                    ForkId { hash: ForkHash([0xa3, 0xf5, 0xab, 0x08]), next: 1561651 },
-                ),
-                (
-                    Head { number: 1561651, ..Default::default() },
-                    ForkId { hash: ForkHash([0xc2, 0x5e, 0xfa, 0x5c]), next: 4460644 },
-                ),
-                (
-                    Head { number: 4460643, ..Default::default() },
-                    ForkId { hash: ForkHash([0xc2, 0x5e, 0xfa, 0x5c]), next: 4460644 },
-                ),
-                (
-                    Head { number: 4460644, ..Default::default() },
-                    ForkId { hash: ForkHash([0x75, 0x7a, 0x1c, 0x47]), next: 5062605 },
-                ),
-                (
-                    Head { number: 5062605, ..Default::default() },
-                    ForkId { hash: ForkHash([0xb8, 0xc6, 0x29, 0x9d]), next: 1678832736 },
-                ),
-                (
-                    Head { number: 6000000, timestamp: 1678832735, ..Default::default() },
-                    ForkId { hash: ForkHash([0xb8, 0xc6, 0x29, 0x9d]), next: 1678832736 },
-                ),
-                // First Shanghai block
-                (
-                    Head { number: 6000001, timestamp: 1678832736, ..Default::default() },
-                    ForkId { hash: ForkHash([0xf9, 0x84, 0x3a, 0xbf]), next: 1705473120 },
-                ),
-                // Future Shanghai block
-                (
-                    Head { number: 6500002, timestamp: 1678832736, ..Default::default() },
-                    ForkId { hash: ForkHash([0xf9, 0x84, 0x3a, 0xbf]), next: 1705473120 },
-                ),
-                // First Cancun block
-                (
-                    Head { number: 6500003, timestamp: 1705473120, ..Default::default() },
-                    ForkId { hash: ForkHash([0x70, 0xcc, 0x14, 0xe2]), next: 0 },
-                ),
-                // Future Cancun block
-                (
-                    Head { number: 6500003, timestamp: 2705473120, ..Default::default() },
-                    ForkId { hash: ForkHash([0x70, 0xcc, 0x14, 0xe2]), next: 0 },
-                ),
-            ],
-        );
     }
 
     #[test]

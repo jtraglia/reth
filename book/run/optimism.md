@@ -17,7 +17,7 @@ the [L2 EL specification][l2-el-spec], and the [OP Stack specification][op-stack
 > `op-reth` is currently in the *alpha* stage of development. It is not yet ready for production use, and therefore does not have a stable release. To run it, you must build the `op-reth` binary from source.
 > If you do encounter any bugs during this early stage of development, please report them in an issue on the [GitHub repository][reth].
 >
-> `op-reth` also does **not** currently support OP Stack chains with legacy, pre-Bedrock state, i.e. `Optimism Mainnet` and `Optimism Goerli`. This will be possible once a database migration tool for pre-Bedrock
+> `op-reth` also does **not** currently support OP Stack chains with legacy, pre-Bedrock state, i.e. `Optimism Mainnet`. This will be possible once a database migration tool for pre-Bedrock
 > state is released, with the capability to extract the legacy state from the old `l2geth` LevelDB datadir and transplant it into Reth's MDBX database.
 
 You will need three things to run `op-reth`:

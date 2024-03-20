@@ -56,12 +56,12 @@ pub use block::{
 pub use chain::{
     AllGenesisFormats, BaseFeeParams, BaseFeeParamsKind, Chain, ChainInfo, ChainSpec,
     ChainSpecBuilder, DisplayHardforks, ForkBaseFeeParams, ForkCondition, ForkTimestamps,
-    NamedChain, DEV, GOERLI, HOLESKY, MAINNET, SEPOLIA,
+    NamedChain, DEV, HOLESKY, MAINNET, SEPOLIA,
 };
 pub use compression::*;
 pub use constants::{
-    DEV_GENESIS_HASH, EMPTY_OMMER_ROOT_HASH, GOERLI_GENESIS_HASH, HOLESKY_GENESIS_HASH,
-    KECCAK_EMPTY, MAINNET_GENESIS_HASH, SEPOLIA_GENESIS_HASH,
+    DEV_GENESIS_HASH, EMPTY_OMMER_ROOT_HASH, HOLESKY_GENESIS_HASH, KECCAK_EMPTY,
+    MAINNET_GENESIS_HASH, SEPOLIA_GENESIS_HASH,
 };
 pub use error::{GotExpected, GotExpectedBoxed};
 pub use genesis::{ChainConfig, Genesis, GenesisAccount};
@@ -69,8 +69,8 @@ pub use header::{Header, HeaderValidationError, HeadersDirection, SealedHeader};
 pub use integer_list::IntegerList;
 pub use log::{logs_bloom, Log};
 pub use net::{
-    goerli_nodes, holesky_nodes, mainnet_nodes, parse_nodes, sepolia_nodes, NodeRecord,
-    GOERLI_BOOTNODES, HOLESKY_BOOTNODES, MAINNET_BOOTNODES, SEPOLIA_BOOTNODES,
+    holesky_nodes, mainnet_nodes, parse_nodes, sepolia_nodes, NodeRecord, HOLESKY_BOOTNODES,
+    MAINNET_BOOTNODES, SEPOLIA_BOOTNODES,
 };
 pub use peer::{AnyNode, PeerId, WithPeerId};
 pub use prune::{

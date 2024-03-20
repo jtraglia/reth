@@ -262,7 +262,7 @@ mod tests {
     use super::*;
     use crate::{
         bloom, constants::EMPTY_ROOT_HASH, hex_literal::hex, Block, GenesisAccount, Log, TxType,
-        GOERLI, HOLESKY, MAINNET, SEPOLIA,
+        HOLESKY, MAINNET, SEPOLIA,
     };
     use alloy_primitives::b256;
     use alloy_rlp::Decodable;
@@ -647,14 +647,6 @@ mod tests {
         assert_eq!(
             expected_mainnet_state_root, calculated_mainnet_state_root,
             "mainnet state root mismatch"
-        );
-
-        let expected_goerli_state_root =
-            b256!("5d6cded585e73c4e322c30c2f782a336316f17dd85a4863b9d838d2d4b8b3008");
-        let calculated_goerli_state_root = state_root_ref_unhashed(&GOERLI.genesis.alloc);
-        assert_eq!(
-            expected_goerli_state_root, calculated_goerli_state_root,
-            "goerli state root mismatch"
         );
 
         let expected_sepolia_state_root =

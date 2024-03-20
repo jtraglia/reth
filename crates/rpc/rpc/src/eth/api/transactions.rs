@@ -16,7 +16,7 @@ use reth_network_api::NetworkInfo;
 use reth_node_api::ConfigureEvmEnv;
 use reth_primitives::{
     eip4844::calc_blob_gasprice,
-    revm::env::{fill_block_env_with_coinbase, tx_env_with_recovered},
+    revm::env::{fill_block_env, tx_env_with_recovered},
     Address, BlockId, BlockNumberOrTag, Bytes, FromRecoveredPooledTransaction, Header,
     IntoRecoveredTransaction, Receipt, SealedBlock, SealedBlockWithSenders,
     TransactionKind::{Call, Create},
@@ -514,7 +514,7 @@ where
         let (cfg, mut block_env, _) = self.evm_env_at(header.parent_hash.into()).await?;
 
         let after_merge = cfg.handler_cfg.spec_id >= SpecId::MERGE;
-        fill_block_env_with_coinbase(&mut block_env, header, after_merge, header.beneficiary);
+        fill_block_env(&mut block_env, header, after_merge);
 
         Ok((cfg, block_env))
     }

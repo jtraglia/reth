@@ -110,10 +110,6 @@ pub const MGAS_TO_GAS: u64 = 1_000_000u64;
 pub const MAINNET_GENESIS_HASH: B256 =
     b256!("d4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3");
 
-/// Goerli genesis hash.
-pub const GOERLI_GENESIS_HASH: B256 =
-    b256!("bf7e331f7f7c1dd2e05159666b3bf8bc7a8a3a9eb1d518969eab529dd9b88c1a");
-
 /// Sepolia genesis hash.
 pub const SEPOLIA_GENESIS_HASH: B256 =
     b256!("25a5cc106eea7138acab33231d7160d69cb777ee0c2c553fcddf5138993e6dd9");

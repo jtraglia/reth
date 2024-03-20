@@ -13,14 +13,14 @@ use std::{
 use reth_primitives::{BASE_MAINNET, BASE_SEPOLIA, OP_SEPOLIA};
 
 #[cfg(not(feature = "optimism"))]
-use reth_primitives::{DEV, GOERLI, HOLESKY, MAINNET, SEPOLIA};
+use reth_primitives::{DEV, HOLESKY, MAINNET, SEPOLIA};
 
 #[cfg(feature = "optimism")]
 /// Chains supported by op-reth. First value should be used as the default.
 pub const SUPPORTED_CHAINS: &[&str] = &["base", "base-sepolia", "optimism-sepolia"];
 #[cfg(not(feature = "optimism"))]
 /// Chains supported by reth. First value should be used as the default.
-pub const SUPPORTED_CHAINS: &[&str] = &["mainnet", "sepolia", "goerli", "holesky", "dev"];
+pub const SUPPORTED_CHAINS: &[&str] = &["mainnet", "sepolia", "holesky", "dev"];
 
 /// Helper to parse a [Duration] from seconds
 pub fn parse_duration_from_secs(arg: &str) -> eyre::Result<Duration, std::num::ParseIntError> {
@@ -34,8 +34,6 @@ pub fn chain_spec_value_parser(s: &str) -> eyre::Result<Arc<ChainSpec>, eyre::Er
     Ok(match s {
         #[cfg(not(feature = "optimism"))]
         "mainnet" => MAINNET.clone(),
-        #[cfg(not(feature = "optimism"))]
-        "goerli" => GOERLI.clone(),
         #[cfg(not(feature = "optimism"))]
         "sepolia" => SEPOLIA.clone(),
         #[cfg(not(feature = "optimism"))]
@@ -69,8 +67,6 @@ pub fn genesis_value_parser(s: &str) -> eyre::Result<Arc<ChainSpec>, eyre::Error
     Ok(match s {
         #[cfg(not(feature = "optimism"))]
         "mainnet" => MAINNET.clone(),
-        #[cfg(not(feature = "optimism"))]
-        "goerli" => GOERLI.clone(),
         #[cfg(not(feature = "optimism"))]
         "sepolia" => SEPOLIA.clone(),
         #[cfg(not(feature = "optimism"))]

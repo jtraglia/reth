@@ -1733,7 +1733,7 @@ impl<TX: DbTx> EvmEnvProvider for DatabaseProvider<TX> {
             },
         );
         let after_merge = spec_id >= SpecId::MERGE;
-        fill_block_env(block_env, &self.chain_spec, header, after_merge);
+        fill_block_env(block_env, header, after_merge);
         Ok(())
     }
 

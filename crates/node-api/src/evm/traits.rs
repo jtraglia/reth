@@ -57,6 +57,6 @@ pub trait ConfigureEvmEnv: Send + Sync + Unpin + Clone {
     ) {
         Self::fill_cfg_env(cfg, chain_spec, header, total_difficulty);
         let after_merge = cfg.handler_cfg.spec_id >= SpecId::MERGE;
-        fill_block_env(block_env, chain_spec, header, after_merge);
+        fill_block_env(block_env, header, after_merge);
     }
 }

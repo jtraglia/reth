@@ -11,8 +11,8 @@
 use reth_consensus_common::validation;
 use reth_interfaces::consensus::{Consensus, ConsensusError};
 use reth_primitives::{
-    constants::MAXIMUM_EXTRA_DATA_SIZE, Chain, ChainSpec, Hardfork, Header, SealedBlock,
-    SealedHeader, EMPTY_OMMER_ROOT_HASH, U256,
+    constants::MAXIMUM_EXTRA_DATA_SIZE, ChainSpec, Hardfork, Header, SealedBlock, SealedHeader,
+    EMPTY_OMMER_ROOT_HASH, U256,
 };
 use std::{sync::Arc, time::SystemTime};
 /// Ethereum beacon consensus
@@ -92,13 +92,6 @@ impl Consensus for BeaconConsensus {
                     timestamp: header.timestamp,
                     present_timestamp,
                 })
-            }
-
-            // Goerli exception:
-            //  * If the network is goerli pre-merge, ignore the extradata check, since we do not
-            //  support clique.
-            if self.chain_spec.chain != Chain::goerli() {
-                validate_header_extradata(header)?;
             }
         }
 

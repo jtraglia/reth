@@ -2,34 +2,16 @@ use crate::{
     constants::{BEACON_ROOTS_ADDRESS, SYSTEM_ADDRESS},
     recover_signer_unchecked,
     revm_primitives::{BlockEnv, Env, TransactTo, TxEnv},
-    Address, Bytes, Chain, ChainSpec, Header, Transaction, TransactionKind,
-    TransactionSignedEcRecovered, B256, U256,
+    Address, Bytes, Header, Transaction, TransactionKind, TransactionSignedEcRecovered, B256, U256,
 };
 
 #[cfg(feature = "optimism")]
 use revm_primitives::OptimismFields;
 
 /// Fill block environment from Block.
-pub fn fill_block_env(
-    block_env: &mut BlockEnv,
-    chain_spec: &ChainSpec,
-    header: &Header,
-    after_merge: bool,
-) {
-    let coinbase = block_coinbase(chain_spec, header, after_merge);
-    fill_block_env_with_coinbase(block_env, header, after_merge, coinbase);
-}
-
-/// Fill block environment with coinbase.
-#[inline]
-pub fn fill_block_env_with_coinbase(
-    block_env: &mut BlockEnv,
-    header: &Header,
-    after_merge: bool,
-    coinbase: Address,
-) {
+pub fn fill_block_env(block_env: &mut BlockEnv, header: &Header, after_merge: bool) {
     block_env.number = U256::from(header.number);
-    block_env.coinbase = coinbase;
+    block_env.coinbase = header.beneficiary;
     block_env.timestamp = U256::from(header.timestamp);
     if after_merge {
         block_env.prevrandao = Some(header.mix_hash);
@@ -44,31 +26,6 @@ pub fn fill_block_env_with_coinbase(
     // EIP-4844 excess blob gas of this block, introduced in Cancun
     if let Some(excess_blob_gas) = header.excess_blob_gas {
         block_env.set_blob_excess_gas_and_price(excess_blob_gas);
-    }
-}
-
-/// Return the coinbase address for the given header and chain spec.
-pub fn block_coinbase(chain_spec: &ChainSpec, header: &Header, after_merge: bool) -> Address {
-    // Clique consensus fills the EXTRA_SEAL (last 65 bytes) of the extra data with the
-    // signer's signature.
-    //
-    // On the genesis block, the extra data is filled with zeros, so we should not attempt to
-    // recover the signer on the genesis block.
-    //
-    // From EIP-225:
-    //
-    // * `EXTRA_SEAL`: Fixed number of extra-data suffix bytes reserved for signer seal.
-    //   * 65 bytes fixed as signatures are based on the standard `secp256k1` curve.
-    //   * Filled with zeros on genesis block.
-    if chain_spec.chain == Chain::goerli() && !after_merge && header.number > 0 {
-        recover_header_signer(header).unwrap_or_else(|err| {
-            panic!(
-                "Failed to recover goerli Clique Consensus signer from header ({}, {}) using extradata {}: {:?}",
-                header.number, header.hash_slow(), header.extra_data, err
-            )
-        })
-    } else {
-        header.beneficiary
     }
 }
 
@@ -333,20 +290,5 @@ pub fn fill_op_tx_env<T: AsRef<Transaction>>(
                 enveloped_tx: Some(envelope),
             }
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::GOERLI;
-
-    #[test]
-    fn test_recover_genesis_goerli_signer() {
-        // just ensures that `block_coinbase` does not panic on the genesis block
-        let chain_spec = GOERLI.clone();
-        let header = chain_spec.genesis_header();
-        let block_coinbase = block_coinbase(&chain_spec, &header, false);
-        assert_eq!(block_coinbase, header.beneficiary);
     }
 }

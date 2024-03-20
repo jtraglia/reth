@@ -244,8 +244,8 @@ mod tests {
         DatabaseEnv,
     };
     use reth_primitives::{
-        Address, Chain, ForkTimestamps, Genesis, GenesisAccount, IntegerList, GOERLI,
-        GOERLI_GENESIS_HASH, MAINNET, MAINNET_GENESIS_HASH, SEPOLIA, SEPOLIA_GENESIS_HASH,
+        Address, Chain, ForkTimestamps, Genesis, GenesisAccount, IntegerList, MAINNET,
+        MAINNET_GENESIS_HASH, SEPOLIA, SEPOLIA_GENESIS_HASH,
     };
     use reth_provider::test_utils::create_test_provider_factory_with_chain_spec;
 
@@ -266,15 +266,6 @@ mod tests {
 
         // actual, expected
         assert_eq!(genesis_hash, MAINNET_GENESIS_HASH);
-    }
-
-    #[test]
-    fn success_init_genesis_goerli() {
-        let genesis_hash =
-            init_genesis(create_test_provider_factory_with_chain_spec(GOERLI.clone())).unwrap();
-
-        // actual, expected
-        assert_eq!(genesis_hash, GOERLI_GENESIS_HASH);
     }
 
     #[test]
