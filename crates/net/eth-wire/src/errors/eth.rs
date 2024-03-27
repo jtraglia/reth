@@ -40,8 +40,8 @@ pub enum EthStreamError {
         /// The number of transaction sizes.
         sizes_len: usize,
     },
-    /// Error when data is not recieved from peer for a prolonged period.
-    #[error("never recieved data from remote peer")]
+    /// Error when data is not received from peer for a prolonged period.
+    #[error("never received data from remote peer")]
     StreamTimeout,
 }
 
